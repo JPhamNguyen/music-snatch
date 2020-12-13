@@ -6,46 +6,48 @@ import os
 
 def store_video(vid):
     file = YouTube(vid)
-    print(file.title)
     # filter for a stream with 1080p and a mp4 format
     stream = file.streams.filter(res='1080p', mime_type='video/mp4').first()
-    print(stream)
 
     # check for existing directories for storing files + images
-    print(os.getcwd())
+    # print(os.getcwd())
 
     if not os.path.exists(os.path.join(os.getcwd(), 'stored_files')):
         print("create a new directory to store YouTube videos + files")
         os.mkdir('stored_files')
 
-    # make sure the same youtube video isn't being downloaded (causes infinite download)
-    # if find(file.title, os.path.join(os.getcwd(), 'stored_files')) is True:
-    #    sys.exit('This file has already been downloaded')
-    # else:
-
-    stream.download('stored_files'),
+    stream.download('stored_files')
     print("Finished downloading video into directory")
+    return file.title
 
 
-def frame_capture(path):
+def frame_capture(video):
     # Path to video file
-    vidObj = cv2.VideoCapture(path)
+    path = os.getcwd() + '/stored_files/' + str(video)
+    cap = cv2.VideoCapture(path)
+    length = int(cap.get(cv2.CAP_PROP_FRAME_COUNT))
+    print(length)
 
-    # Used as counter variable
-    count = 0
+    try:
+        if not os.path.exists('data'):
+            os.makedirs('data')
+    except OSError:
+        print('Error: Creating directory of data')
 
-    # checks whether frames were extracted
-    success = 1
+    currentFrame = 0
+    # while True:
+    while cap.read() is True:
+        ret, frame = cap.read()
 
-    while success:
-        # vidObj object calls read
-        # function extract frames
-        success, image = vidObj.read()
+        name = './data/frame' + str(currentFrame) + '.jpg'
+        print('Creating...' + name)
+        cv2.imwrite(name, frame)
+        currentFrame += 1
 
-        # Saves the frames with frame-count
-        # cv2.imwrite("frame%d.jpg" % count, image)
 
-        count += 1
+    cap.release()
+    cv2.destroyAllWindows()
+
 
 
 def find(name, path):

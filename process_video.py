@@ -24,19 +24,23 @@ def store_video(vid):
 def frame_capture(video):
     # Path to video file
     path = os.getcwd() + '/stored_files/' + str(video)
+    print(video)
     cap = cv2.VideoCapture(path)
     length = int(cap.get(cv2.CAP_PROP_FRAME_COUNT))
     print(length)
 
+    frames_data = 'data/' + video
+    print(frames_data)
     try:
-        if not os.path.exists('data'):
+        # if not os.path.exists('data/' + video):
+        if not os.path.exists(frames_data):
             os.makedirs('data')
     except OSError:
         print('Error: Creating directory of data')
 
     currentFrame = 0
     # while True:
-    while cap.read() is True:
+    while currentFrame != length:
         ret, frame = cap.read()
 
         name = './data/frame' + str(currentFrame) + '.jpg'
@@ -44,10 +48,8 @@ def frame_capture(video):
         cv2.imwrite(name, frame)
         currentFrame += 1
 
-
     cap.release()
     cv2.destroyAllWindows()
-
 
 
 def find(name, path):

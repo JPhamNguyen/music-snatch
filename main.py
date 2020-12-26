@@ -20,6 +20,7 @@ if __name__ == '__main__':
 
     process_images.compareFrames(image1, image2)
     process_images.isolateSheetMusic(image1)
+
     # capture frames of video
     # process_video.frame_capture(video)
 

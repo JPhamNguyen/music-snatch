@@ -12,30 +12,30 @@ import imutils
 def isolateSheetMusic(frame):
     # uses rectangular border detection for sheet music
     image = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
-    blurred = cv2.GaussianBlur(image, (5, 5), 0)
-    thresh = cv2.threshold(blurred, 60, 255, cv2.THRESH_BINARY)[1]
-    # cv2.imshow('blurred', blurred)
-    # cv2.imshow('threshed', thresh)
-    # cv2.waitKey(0)
-    # cv2.destroyAllWindows()
+    # blurred = cv2.GaussianBlur(image, (5, 5), 0)
+    # thresh = cv2.threshold(blurred, 60, 255, cv2.THRESH_BINARY)[1]
+    thresh = cv2.threshold(image, 60, 255, cv2.THRESH_BINARY)[1]
 
-    contours = cv2.findContours(thresh.copy(), cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
+    contours = cv2.findContours(thresh.copy(), cv2.RETR_TREE, cv2.CHAIN_APPROX_NONE)
     contours = imutils.grab_contours(contours)
 
     for c in contours:
-        m = cv2.moments(c)
-        # cX = int((m["m10"] / m["m00"]))
-        # cY = int((m["m01"] / m["m00"]))
-        c = c.astype("float")
-        c = c.astype("int")
-        cv2.drawContours(image, [c], -1, (0, 255, 0), 2)
-        # show the output image
-        # cv2.imshow("analyze", image)
-        # cv2.waitKey(0)
-        # cv2.destroyAllWindows()
+        approx = cv2.approxPolyDP(c, 0.01 * cv2.arcLength(c, True), True)
+        cv2.drawContours(image, [approx], 0, (0, 255, 0), 2)
+        x = approx.ravel()[0]
+        y = approx.ravel()[1] - 5
+        if len(approx) == 3:
+            cv2.putText(image, "Triangle", (x, y),
+                        cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 0, 0), 1)
+        elif len(approx) == 4:
+            x1, y1, w, h = cv2.boundingRect(approx)
+            aspect_ratio = float(w) / float(h)
+            print(aspect_ratio)
+            if 0.95 <= aspect_ratio <= 1.05:
+                cv2.putText(image, "Square", (x, y),
+                            cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 0, 0), 1)
 
-    edges = cv2.Canny(image, 100, 100)
-    cv2.imshow("image", image)
+    cv2.imshow("img", image)
     cv2.waitKey()
     cv2.destroyAllWindows()
 

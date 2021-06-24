@@ -1,0 +1,24 @@
+name: music
+dependencies:
+  - python=3.8.5
+  - certifi==2020.6.20
+  - cycler==0.10.0
+  - decorator==4.4.2
+  - imageio==2.9.0
+  - imutils==0.5.3
+  - kiwisolver==1.3.1
+  - matplotlib==3.3.3
+  - natsort==7.1.0
+  - networkx==2.5
+  - numpy==1.19.4
+  - opencv-python==4.4.0.46
+  - Pillow==8.0.1
+  - pyparsing==2.4.7
+  - python-dateutil==2.8.1
+  - pytube==10.8.5
+  - PyWavelets==1.1.1
+  - scikit-image==0.18.1
+  - scipy==1.5.4
+  - six==1.15.0
+  - tifffile==2020.12.8
+  - typing-extensions==3.7.4.3
